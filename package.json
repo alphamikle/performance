@@ -1,0 +1,14 @@
+{
+  "name": "tests",
+  "version": "1.0.0",
+  "description": "",
+  "main": "print.js",
+  "scripts": {
+    "test": "bash run.sh"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "jsonexport": "^3.0.1"
+  }
+}

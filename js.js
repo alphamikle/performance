@@ -1,4 +1,6 @@
 const { performance } = require('perf_hooks');
+const { resolve } = require('path');
+const fs = require('fs');
 
 const earthRadius = 6371;
 
@@ -7,7 +9,7 @@ const ps = (label) => labels.set(label, performance.now());
 const pe = (label) => {
   const diff = performance.now() - labels.get(label);
   labels.delete(label);
-  return (diff * 1000);
+  return diff * 1000; // ? To been microseconds
 };
 
 const FOR_OF = 'for of';
@@ -17,9 +19,9 @@ const EMPTY_FOR_I = 'for i with only iterations';
 const DE_OPTIMIZED_FOR_I = 'for i with de-optimisations';
 
 // ? Rules of tests
-let TEST_SET = 2;
-const ITEMS_IN_CYCLE = 10_000;
-const MAX_CYCLES = 257;
+let TEST_SET = 0;
+const ITEMS_IN_CYCLE = 3000;
+const MAX_CYCLES = 100;
 
 let cycles = 1;
 const coords = [];
@@ -100,8 +102,8 @@ const saveResults = () => {
 };
 
 const printResult = () => {
-  console.log(`Benchmark for ${ITEMS_IN_CYCLE} items in microseconds and test set "${testSets[TEST_SET].name}"`)
-  console.table(timesPerIterations);
+  const outputs = resolve(__dirname, 'outputs', `js.items${ITEMS_IN_CYCLE}_test_set_${testSets[TEST_SET].name}.json`);
+  fs.writeFileSync(outputs, JSON.stringify(timesPerIterations));
   timesPerIterations.length = 0;
 };
 
@@ -150,7 +152,11 @@ const multiBenchmark = async (i = cycles) => {
 };
 
 ((async () => {
-  for (let i = 1; i < MAX_CYCLES; i += i) {
+  const args = process.argv;
+  if (args.length > 2) {
+    TEST_SET = Number(args[2]);
+  }
+  for (let i = 1; i < MAX_CYCLES; i+=5) {
     await multiBenchmark(i);
   }
   printResult();
