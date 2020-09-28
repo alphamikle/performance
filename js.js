@@ -31,7 +31,7 @@ const times = {
   [FOR_OF]: 0,
   [FOR_I]: 0,
   [FOR_I_OUT]: 0,
-  [EMPTY_FOR_I]: 0,
+  // [EMPTY_FOR_I]: 0,
   [DE_OPTIMIZED_FOR_I]: 0,
 };
 const timesPerIterations = [];
@@ -94,15 +94,19 @@ const saveResults = () => {
   const timesPerIteration = {
     cycles: cycles,
   };
+  let average = 0;
   for (const key in times) {
     timesPerIteration[key] = times[key] / cycles;
+    average += timesPerIteration[key];
     times[key] = 0;
   }
+  average = average / Object.keys(times).length;
+  timesPerIteration['average'] = average;
   timesPerIterations.push(timesPerIteration);
 };
 
 const printResult = () => {
-  const outputs = resolve(__dirname, 'outputs', `js.items${ITEMS_IN_CYCLE}_test_set_${testSets[TEST_SET].name}.json`);
+  const outputs = resolve(__dirname, 'outputs', `js.items_${ITEMS_IN_CYCLE}_test_set_${testSets[TEST_SET].name}.json`);
   fs.writeFileSync(outputs, JSON.stringify(timesPerIterations));
   timesPerIterations.length = 0;
 };
@@ -111,10 +115,10 @@ const runIterations = () => {
   for (let i = 0; i < cycles; i++) {
     initData();
 
-    ps(EMPTY_FOR_I);
-    for (let i = 0; i < coords.length; i++) {
-    }
-    times[EMPTY_FOR_I] += pe(EMPTY_FOR_I);
+    // ps(EMPTY_FOR_I);
+    // for (let i = 0; i < coords.length; i++) {
+    // }
+    // times[EMPTY_FOR_I] += pe(EMPTY_FOR_I);
 
     ps(FOR_I);
     for (let i = 0; i < coords.length; i++) {

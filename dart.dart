@@ -32,7 +32,7 @@ final Map<String, int> times = {
   FOR_OF: 0,
   FOR_I: 0,
   FOR_I_OUT: 0,
-  EMPTY_FOR_I: 0,
+  // EMPTY_FOR_I: 0,
   DE_OPTIMIZED_FOR_I: 0,
 };
 final List<Map<String, num>> timesPerIterations = [];
@@ -48,6 +48,7 @@ Map<String, double> getCoords() {
 }
 
 double getDistance({double lat, double lon, double lat2, double lon2}) => sin(lat) * sin(lat2) + cos(lat) * cos(lat2) * cos(lon - lon2) * earthRadius;
+
 void initData() {
   coords.clear();
   stringedCoords.clear();
@@ -105,10 +106,14 @@ void saveResults() {
   final Map<String, num> timesPerIteration = {
     'cycles': cycles,
   };
+  double average = 0;
   for (String key in times.keys) {
     timesPerIteration[key] = times[key] / cycles;
     times[key] = 0;
+    average += timesPerIteration[key];
   }
+  average = average / times.keys.length;
+  timesPerIteration['average'] = average;
   timesPerIterations.add(timesPerIteration);
 }
 
@@ -124,9 +129,9 @@ void runIterations() {
   for (int i = 0; i < cycles; i++) {
     initData();
 
-    ps(EMPTY_FOR_I);
-    for (int i = 0; i < coords.length; i++) {}
-    times[EMPTY_FOR_I] += pe(EMPTY_FOR_I);
+    // ps(EMPTY_FOR_I);
+    // for (int i = 0; i < coords.length; i++) {}
+    // times[EMPTY_FOR_I] += pe(EMPTY_FOR_I);
 
     ps(FOR_I);
     for (int i = 0; i < coords.length; i++) {
